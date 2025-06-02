@@ -1,11 +1,9 @@
 // src/components/types.ts
+import type { CSSProperties } from "react";
 
-/**
- * 돌림판(룰렛)의 각 슬롯(item)을 정의하는 타입
- * - option: 칸에 표시될 메뉴 이름(문자열)
- * - style?: React.CSSProperties  ->  슬롯 배경색, 텍스트색 등을 지정하기
- */
-export interface WheelOption {
+export interface WheelData {
+  /** 슬롯(칸)에 표시될 텍스트 */
   option: string;
-  style?: React.CSSProperties;
+  /** (선택) 슬롯 배경/글자 색상을 지정할 때 쓰는 CSS 스타일 */
+  style?: CSSProperties;
 }

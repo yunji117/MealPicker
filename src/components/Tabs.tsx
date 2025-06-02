@@ -1,5 +1,4 @@
 // src/components/Tabs.tsx
-import React from "react";
 import { NavLink } from "react-router-dom";
 
 export default function Tabs() {

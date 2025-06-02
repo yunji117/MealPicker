@@ -1,12 +1,21 @@
 // src/pages/DinnerPage.tsx
-import React, { useState, useEffect } from "react";
-import type { WheelOption } from "../components/types";
+import { useState, useEffect, useCallback } from "react";
+import type { WheelData } from "../components/types";
 import RouletteWheel from "../components/RouletteWheel";
 import ResultModal from "../components/ResultModal";
 import { getRandomColorHex, getContrastColor } from "../utils/color";
 
 export default function DinnerPage() {
-  const defaultOptions = [
+
+
+  const [items, setItems] = useState<WheelData[]>([]);
+  const [mustSpin, setMustSpin] = useState(false);
+  const [prizeNumber, setPrizeNumber] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [winner, setWinner] = useState("");
+
+  const resetToDefault = useCallback(() => {
+     const defaultOptions = [
     "스테이크",
     "치킨",
     "피자",
@@ -15,29 +24,26 @@ export default function DinnerPage() {
     "샌드위치",
   ];
 
-  const [items, setItems] = useState<WheelOption[]>([]);
-  const [mustSpin, setMustSpin] = useState(false);
-  const [prizeNumber, setPrizeNumber] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [winner, setWinner] = useState("");
-
-  useEffect(() => {
-    resetToDefault();
-  }, []);
-
-  function resetToDefault() {
-    const arr: WheelOption[] = defaultOptions.map((opt) => {
-      const bg = getRandomColorHex();
-      return {
-        option: opt,
-        style: {
-          backgroundColor: bg,
-          color: getContrastColor(bg),
-        },
-      };
-    });
-    setItems(arr);
-  }
+      const arr: WheelData[] = defaultOptions.map((opt) => {
+        const bg = getRandomColorHex();
+        return {
+          option: opt,
+          style: {
+            backgroundColor: bg,
+            color: getContrastColor(bg),
+          },
+        };
+      });
+      setItems(arr);
+    }, []); // defaultOptions가 바뀌지 않으므로 빈 배열
+  
+    /** 
+     * 컴포넌트가 마운트될 때(처음 렌더될 때) 한 번만 resetToDefault 실행 
+     * resetToDefault가 useCallback으로 묶여 있기 때문에, 의존성에 넣어도 변화가 일어나지 않는다. 
+     */
+    useEffect(() => {
+      resetToDefault();
+    }, [resetToDefault]);
 
   function handleAdd() {
     const newMenu = prompt("추가할 메뉴를 입력하세요")?.trim();
@@ -94,19 +100,21 @@ export default function DinnerPage() {
 
   return (
     <div className="flex flex-col items-center mt-8 space-y-6">
-      <RouletteWheel
-        data={items}
-        mustStartSpinning={mustSpin}
-        prizeNumber={prizeNumber}
-        onStopSpinning={handleStopSpinning}
-      />
+      {items.length > 0 && items.every(item => item.option) && (
+        <RouletteWheel
+          data={items}
+          mustStartSpinning={mustSpin}
+          prizeNumber={prizeNumber}
+          onStopSpinning={handleStopSpinning}
+        />
+      )}
 
       <div className="flex space-x-2">
         <button
           onClick={handleAdd}
           className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-500"
         >
-          +
+          메뉴추가
         </button>
         <button
           onClick={handleRemoveByIndex}

@@ -14,15 +14,12 @@ export default function Layout({ children }: LayoutProps) {
         initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-black py-6"
+        className=" py-6"
       >
         <h1 className="text-4xl md:text-5xl font-semibold text-center">
           What’s Today Menu
         </h1>
       </motion.div>
-
-      {/* 탭 메뉴가 들어갈 부분은 Tabs 컴포넌트 안에서 처리 */}
-      <div className="px-4">{/* 자식 컴포넌트가 이 안으로 옴 */}</div>
 
       {/* 메인 컨텐츠는 Layout을 쓰는 곳(App)에서 children으로 전달 */}
       <div className="flex-1 px-4">{children}</div>

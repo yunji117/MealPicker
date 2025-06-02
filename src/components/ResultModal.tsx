@@ -1,6 +1,6 @@
 // src/components/ResultModal.tsx
 
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 interface CustomModalProps {
@@ -9,7 +9,7 @@ interface CustomModalProps {
   winner: string;
 }
 
-export default function CustomModal({ isOpen, onClose, winner }: CustomModalProps) {
+export default function ResultModal({ isOpen, onClose, winner }: CustomModalProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="fixed inset-0 z-20 flex items-center justify-center" onClose={onClose}>
