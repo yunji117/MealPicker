@@ -6,45 +6,40 @@ import ResultModal from "../components/ResultModal";
 import { getRandomColorHex, getContrastColor } from "../utils/color";
 
 export default function DinnerPage() {
-
-
   const [items, setItems] = useState<WheelData[]>([]);
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [winner, setWinner] = useState("");
 
+  /** 선택 삭제 -> 버튼 클릭 시 삭제 가능한 목록을 보일지 여부 */
+  const [showDeleteList, setShowDeleteList] = useState(false);
+
+  /** 
+   * resetToDefault: 초기에 그리고 리셋 버튼 클릭 시 호출
+   * 디너 페이지 기본 메뉴를 배열로 세팅
+   */
   const resetToDefault = useCallback(() => {
-     const defaultOptions = [
-    "스테이크",
-    "치킨",
-    "피자",
-    "파스타",
-    "뷔페",
-    "샌드위치",
-  ];
+    const defaultOptions = ["스테이크", "치킨", "피자", "파스타", "뷔페", "샌드위치"];
+    const arr: WheelData[] = defaultOptions.map((opt) => {
+      const bg = getRandomColorHex();
+      return {
+        option: opt,
+        style: {
+          backgroundColor: bg,
+          color: getContrastColor(bg),
+        },
+      };
+    });
+    setItems(arr);
+    setShowDeleteList(false); // 리셋하면 아코디언 목록도 접어둡니다
+  }, []);
 
-      const arr: WheelData[] = defaultOptions.map((opt) => {
-        const bg = getRandomColorHex();
-        return {
-          option: opt,
-          style: {
-            backgroundColor: bg,
-            color: getContrastColor(bg),
-          },
-        };
-      });
-      setItems(arr);
-    }, []); // defaultOptions가 바뀌지 않으므로 빈 배열
-  
-    /** 
-     * 컴포넌트가 마운트될 때(처음 렌더될 때) 한 번만 resetToDefault 실행 
-     * resetToDefault가 useCallback으로 묶여 있기 때문에, 의존성에 넣어도 변화가 일어나지 않는다. 
-     */
-    useEffect(() => {
-      resetToDefault();
-    }, [resetToDefault]);
+  useEffect(() => {
+    resetToDefault();
+  }, [resetToDefault]);
 
+  /** 메뉴 추가 */
   function handleAdd() {
     const newMenu = prompt("추가할 메뉴를 입력하세요")?.trim();
     if (!newMenu) return;
@@ -59,25 +54,29 @@ export default function DinnerPage() {
     ]);
   }
 
+  /** 선택 삭제 -> 아코디언 토글 */
   function handleRemoveByIndex() {
-    if (items.length === 0) return;
-    const idxStr = prompt(`삭제할 인덱스를 입력하세요 (0~${items.length - 1})`);
-    if (idxStr === null) return;
-    const idx = parseInt(idxStr);
-    if (isNaN(idx) || idx < 0 || idx >= items.length) {
-      alert("유효하지 않은 인덱스입니다.");
-      return;
-    }
-    setItems((prev) => prev.filter((_, i) => i !== idx));
+    setShowDeleteList((prev) => !prev);
   }
 
+  /** 아코디언 목록 내 개별 항목 삭제 */
+  function handleDeleteItem(idxToDelete: number) {
+    setItems((prev) => prev.filter((_, i) => i !== idxToDelete));
+  }
+
+  /** 랜덤 삭제 버튼: items 중 랜덤 하나 삭제. 
+   *  삭제 후 items가 빈 배열이 되어도, 아래 렌더링 부분에서 placeholder가 넘어간다.
+   */
   function handleRandomRemove() {
     if (items.length === 0) return;
     const idx = Math.floor(Math.random() * items.length);
     setItems((prev) => prev.filter((_, i) => i !== idx));
+    // 여기서 items가 빈 배열이 되더라도, 아래 <RouletteWheel>은 placeholder를 보여준다. 
   }
 
+  /** 돌리기 버튼 */
   function handleSpin() {
+    if (mustSpin) return; // 이미 돌리고 있다면 중복 실행 방지
     if (items.length === 0) {
       alert("먼저 메뉴를 추가하거나 기본값을 유지하세요.");
       return;
@@ -87,6 +86,7 @@ export default function DinnerPage() {
     setMustSpin(true);
   }
 
+  /** 룰렛이 멈출 때 호출 */
   function handleStopSpinning() {
     const selected = items[prizeNumber]?.option || "";
     setWinner(selected);
@@ -99,16 +99,29 @@ export default function DinnerPage() {
   }
 
   return (
-    <div className="flex flex-col items-center mt-8 space-y-6">
-      {items.length > 0 && items.every(item => item.option) && (
-        <RouletteWheel
-          data={items}
-          mustStartSpinning={mustSpin}
-          prizeNumber={prizeNumber}
-          onStopSpinning={handleStopSpinning}
+    <div className="flex flex-col items-center mt-8 space-y-6 px-4">
+      {/*
+        항상 <RouletteWheel>를 렌더하고, data에 items가 비어 있으면 placeholder를 넘겨준다.
+      */}
+      <div onClick={handleSpin} className="cursor-pointer">
+      <RouletteWheel
+        data={
+          items.length > 0
+          ? items
+          : [
+            {
+              option: "메뉴를 추가하세요",
+              style: { backgroundColor: "#eeeeee", color: "#888888" },
+            },
+          ]
+        }
+        mustStartSpinning={mustSpin}
+        prizeNumber={prizeNumber}
+        onStopSpinning={handleStopSpinning}
         />
-      )}
+        </div>
 
+      {/* 버튼 그룹 */}
       <div className="flex space-x-2">
         <button
           onClick={handleAdd}
@@ -118,33 +131,75 @@ export default function DinnerPage() {
         </button>
         <button
           onClick={handleRemoveByIndex}
-          className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-500"
+          className="flex items-center px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-500"
         >
-          선택 -
+          선택 –
+          <span
+            className={`ml-1 inline-block transform transition-transform duration-150 ${
+              showDeleteList ? "rotate-180" : ""
+            }`}
+          >
+            ▼
+          </span>
         </button>
         <button
           onClick={handleRandomRemove}
           className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-500"
         >
-          랜덤 -
+          랜덤 –
         </button>
       </div>
 
-      <button
-        onClick={handleSpin}
-        className="px-6 py-2 bg-fuchsia-500 text-white rounded-lg hover:bg-fuchsia-600"
-        disabled={mustSpin}
-      >
-        돌리기
-      </button>
+      {/* '선택 삭제' 버튼을 눌렀을 때 펼쳐지는 삭제 목록(아코디언) */}
+      {showDeleteList && (
+        <div className="w-full max-w-md bg-white shadow-md rounded-lg overflow-hidden transition-all duration-200">
+          <h4 className="px-4 py-2 bg-gray-100 border-b">메뉴 삭제하기</h4>
+          <ul className="divide-y">
+            {items.length > 0 ? (
+              items.map((item, idx) => (
+                <li key={idx} className="flex items-center justify-between px-4 py-2">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-gray-800">{item.option}</span>
+                    <div
+                      className="w-6 h-4 border border-gray-300 rounded"
+                      style={{ backgroundColor: item.style?.backgroundColor }}
+                    />
+                  </div>
+                  <button
+                    onClick={() => handleDeleteItem(idx)}
+                    className="px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+                  >
+                    삭제
+                  </button>
+                </li>
+              ))
+            ) : (
+              <li className="px-4 py-2 text-gray-500 text-center">
+                등록된 메뉴가 없습니다.
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
 
-      <button
-        onClick={resetToDefault}
-        className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600"
-      >
-        리셋
-      </button>
+      {/* 리셋, 돌리기 버튼 */}
+      <div className="flex space-x-2">
+        <button
+          onClick={resetToDefault}
+          className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600"
+        >
+          리셋
+        </button>
+        <button
+          onClick={handleSpin}
+          className="px-6 py-2 bg-fuchsia-500 text-white rounded-lg hover:bg-fuchsia-600"
+          disabled={mustSpin}
+        >
+          돌리기
+        </button>
+      </div>
 
+      {/* 당첨 모달 */}
       <ResultModal isOpen={isModalOpen} onClose={closeModal} winner={winner} />
     </div>
   );
