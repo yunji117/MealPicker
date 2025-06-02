@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.tsx
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Layout from "./components/Layout";
+import Tabs from "./components/Tabs";
+import LunchPage from "./pages/LunchPage";
+import DinnerPage from "./pages/DinnerPage";
+import NightPage from "./pages/NightPage";
+import CustomPage from "./pages/CustomPage";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Layout>
+      {/* 탭 메뉴 영역 */}
+      <Tabs />
 
-export default App
+      {/* 메인 컨텐츠: 선택된 탭의 페이지를 렌더링 */}
+      <Routes>
+        {/* 기본 경로 "/" 접속 시 "/lunch"로 리다이렉트 */}
+        <Route path="/" element={<Navigate to="/lunch" />} />
+        <Route path="/lunch" element={<LunchPage />} />
+        <Route path="/dinner" element={<DinnerPage />} />
+        <Route path="/night" element={<NightPage />} />
+        <Route path="/custom" element={<CustomPage />} />
+
+        {/* 그 외 경로가 오면 다시 "/lunch" 로 */}
+        <Route path="*" element={<Navigate to="/lunch" />} />
+      </Routes>
+    </Layout>
+  );
+}
