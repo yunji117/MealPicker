@@ -13,10 +13,10 @@ export default function Layout({ children }: LayoutProps) {
       <motion.div
         initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 1, ease: "easeOut" }}
         className=" py-6"
       >
-        <h1 className="text-4xl md:text-5xl font-semibold text-center">
+        <h1 className="text-4x1 md:text-5xl font-semibold text-center">
           What’s Today Menu
         </h1>
       </motion.div>

@@ -12,11 +12,24 @@ import { getRandomColorHex, getContrastColor } from "../utils/color";
  */
 const defaultOptions = [
   "쌀국수",
-  "짜장면",
+  "볶음밥",
   "덮밥",
   "라면",
   "김밥",
   "돈까스",
+  "물쫄면",
+  "샌드위치",
+  "샐러드",
+  "울면",
+  "햄버거",
+  "마라탕",
+  "초밥",
+  "완당면",
+  "콩국수",
+  "카레",
+  "된장찌개",
+  "김치찌개",
+  "순두부찌개",
 ];
 
 export default function LunchPage() {

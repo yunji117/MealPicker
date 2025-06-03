@@ -20,7 +20,24 @@ export default function DinnerPage() {
    * 디너 페이지 기본 메뉴를 배열로 세팅
    */
   const resetToDefault = useCallback(() => {
-    const defaultOptions = ["스테이크", "치킨", "피자", "파스타", "뷔페", "샌드위치"];
+    const defaultOptions = [
+      "스테이크",
+      "치킨",
+      "피자",
+      "파스타",
+      "샌드위치",
+      "초밥",
+      "타코",
+      "돈까스",
+      "샐러드",
+      "곱창",
+      "제육볶음",
+      "김치찌개",
+      "부대찌개",
+      "닭갈비",
+      "마라탕",
+      "뼈구이",
+    ];
     const arr: WheelData[] = defaultOptions.map((opt) => {
       const bg = getRandomColorHex();
       return {

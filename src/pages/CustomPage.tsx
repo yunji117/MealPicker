@@ -1,4 +1,4 @@
-// src/pages/DinnerPage.tsx
+// src/pages/CustomPage.tsx
 import { useState, useEffect, useCallback } from "react";
 import type { WheelData } from "../components/types";
 import RouletteWheel from "../components/RouletteWheel";
@@ -36,6 +36,7 @@ export default function DinnerPage() {
       return;
     }
     const bg = getRandomColorHex();
+
     setItems((prev) => [
       ...prev,
       { option: newMenu, style: { backgroundColor: bg, color: getContrastColor(bg) } },
@@ -94,7 +95,7 @@ export default function DinnerPage() {
           ? items
           : [
             {
-              option: "메뉴를 추가하세요",
+              option: "메뉴를 추가해주세요",
               style: { backgroundColor: "#eee", color: "#888" },
             },
           ]

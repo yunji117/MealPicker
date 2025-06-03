@@ -19,7 +19,31 @@ export default function DinnerPage() {
    * resetToDefault: 마운트 또는 리셋 버튼 클릭 시 기본 메뉴로 세팅
    */
   const resetToDefault = useCallback(() => {
-    const defaultOptions = ["스테이크", "치킨", "피자", "파스타", "뷔페", "샌드위치"];
+    const defaultOptions = [
+      "치킨",
+      "피자",
+      "샌드위치",
+      "돈까스",
+      "샐러드",
+      "곱창",
+      "제육볶음",
+      "김치찌개",
+      "부대찌개",
+      "닭갈비",
+      "마라탕",
+      "뼈구이",
+      "파전",
+      "낙곱새",
+      "족발",
+      "보쌈",
+      "국밥",
+      "짜글이",
+      "김치찜",
+      "곱도리탕",
+      "삼겹살",
+      "두루치기",
+      
+    ];
     const arr: WheelData[] = defaultOptions.map((opt) => {
       const bg = getRandomColorHex();
       return {
