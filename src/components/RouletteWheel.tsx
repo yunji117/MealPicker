@@ -1,5 +1,4 @@
 // src/components/RouletteWheel.tsx
-import { Wheel } from "react-custom-roulette";
 import type { WheelData } from "./types";
 
 interface RouletteProps {
@@ -9,6 +8,9 @@ interface RouletteProps {
   onStopSpinning: () => void;
 }
 
+// react-custom-roulette 사용한 부분
+import { Wheel } from "react-custom-roulette";
+
 export default function RouletteWheel({
   data,
   mustStartSpinning,
@@ -16,7 +18,7 @@ export default function RouletteWheel({
   onStopSpinning,
 }: RouletteProps) {
   return (
-    <div className="mx-auto" style={{ transition: "transform 0.7s cubic-bezier(0.4,0,0.2,1)" }}>
+    <div className="mx-auto transition-transform duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]">
       <div className="rotate-[180deg]">
         <Wheel
           mustStartSpinning={mustStartSpinning}
