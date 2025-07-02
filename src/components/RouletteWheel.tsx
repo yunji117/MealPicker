@@ -32,6 +32,7 @@ export default function RouletteWheel({
           radiusLineWidth={1}
           textColors={["#000000", "#ffffff"]}
           fontSize={14}
+          // 텍스트 세로 정렬
           perpendicularText={false}
           onStopSpinning={onStopSpinning}
         />

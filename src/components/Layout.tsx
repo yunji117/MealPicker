@@ -8,7 +8,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+    <div className="min-h-screen bg-white text-black flex flex-col">
       {/* 타이틀 영역 */}
       <motion.div
         initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
