@@ -11,6 +11,7 @@ export default function DinnerPage() {
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [winner, setWinner] = useState("");
+  const [menuInput, setMenuInput] = useState("");
 
   /** '선택 삭제' 버튼 클릭 시 삭제 가능한 목록을 보일지 여부 */
   const [showDeleteList, setShowDeleteList] = useState(false);
@@ -64,7 +65,7 @@ export default function DinnerPage() {
 
   /** 메뉴 추가 */
   function handleAdd() {
-    const newMenu = prompt("추가할 메뉴를 입력하세요")?.trim();
+    const newMenu = menuInput.trim();
     if (!newMenu) return;
     if (items.some((it) => it.option === newMenu)) {
       alert("이미 동일한 메뉴가 존재합니다.");
@@ -75,6 +76,7 @@ export default function DinnerPage() {
       ...prev,
       { option: newMenu, style: { backgroundColor: bg, color: getContrastColor(bg) } },
     ]);
+    setMenuInput("");
   }
 
   /** '선택 삭제' 버튼 토글(아코디언) */
@@ -143,14 +145,30 @@ export default function DinnerPage() {
         />
         </div>
 
+      {/* 메뉴 추가 입력 */}
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleAdd();
+        }}
+        className="flex w-full max-w-md space-x-2"
+      >
+        <input
+          value={menuInput}
+          onChange={(event) => setMenuInput(event.target.value)}
+          placeholder="추가할 메뉴 입력"
+          className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm"
+        />
+        <button
+          type="submit"
+          className="px-3 py-2 bg-gray-600 text-white rounded hover:bg-gray-500"
+        >
+          추가
+        </button>
+      </form>
+
       {/* 버튼 그룹 */}
       <div className="flex space-x-2">
-        <button
-          onClick={handleAdd}
-          className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-500"
-        >
-          메뉴추가
-        </button>
         <button
           onClick={handleRemoveByIndex}
           className="flex items-center px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-500"
